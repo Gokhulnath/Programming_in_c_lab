@@ -1,0 +1,713 @@
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+*/
+/*Header file -input.h*/
+void read_write_console(char file_name[]){
+    char ch;
+    FILE *fptr;    
+    fptr=fopen(file_name,"r");
+    while((ch=fgetc(fptr))!=EOF){
+        printf("%c",ch);
+    }
+    fclose(fptr);
+}
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+/*1.Create a file called input.txt with 5 lines of text. Write a C function that reads the text file given as
+command line argument and writes the file contents on the console. Save this function in a header
+file input.h so that the header can be included in applications that require reading and displaying
+the contents from a file.*/
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include"input.h"
+
+void main(int argc, char *argv[])
+{
+	FILE *fptr;
+	char ch;
+	fptr=fopen(argv[1],"w");
+	if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	fprintf(fptr,"Hello world.\n");
+	fprintf(fptr,"welcome to programing in c.\n");
+	fprintf(fptr,"here we are going to see about files.\n");
+	fprintf(fptr,"we are using function in header files\n");
+	fprintf(fptr,"end of the program.\n");
+	fclose(fptr);
+	read_write_console(argv[1]);
+}
+
+
+
+
+/*
+
+OUTPUT-
+cse1051@mpl-8:~$./file data
+Hello world.
+welcome to programing in c.
+here we are going to see about files.
+we are using function in header files
+end of the program.
+*/
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+/*
+2.Write a function that counts the number of characters, digits, words and lines in a text file. Write
+these counts in a text file with description. Input and out text file names must be given as
+command line arguments.
+*/
+
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include"input.h"
+
+void main(int argc, char *argv[]){
+    FILE *fptr;
+    fptr=fopen(argv[1],"r");
+    if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+    char ch;
+    int count_char=0,count_digit=0,count_words=0,count_line=0;
+    while((ch=fgetc(fptr))!=EOF)
+    {
+        if(isalpha(ch))
+            count_char++;
+        else if(isdigit(ch))
+            count_digit++;
+        else if(ch==' ')
+            count_words++;
+        else if(ch=='\n'){
+            count_line++;
+            count_words++;
+        }
+    }
+    fclose(fptr);
+    fptr=fopen(argv[2],"w");
+    fprintf(fptr,"characters=%d\n",count_char);
+    fprintf(fptr,"digits=%d\n",count_digit);
+    fprintf(fptr,"words=%d\n",count_words);
+    fprintf(fptr,"lines=%d\n",count_line);
+    fclose(fptr);
+    read_write_console(argv[2]);
+}
+
+
+
+
+
+/*OUTPUT-
+cse1051@mpl-8:~$./file input output
+characters=107
+digits=0
+words=26
+lines=5
+
+*/
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*3. Write a function that reads a given text file; searches for vowels and displays the contents in stdout
+stream after replacing them with the character "z".*/
+
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include"input.h"
+
+
+void main(int argc, char *argv[]){
+    FILE *fptr;
+    fptr=fopen(argv[1],"r+");
+    if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+    char ch;
+    while((ch=fgetc(fptr))!=EOF){
+	tolower(ch);
+        switch(ch){
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u':fseek(fptr,-1,SEEK_CUR);
+                     fputc('z',fptr);
+                     break;
+        }
+	fseek(fptr,0,SEEK_CUR);
+    }
+    fclose(fptr);
+    read_write_console(argv[1]);
+}
+
+
+
+*/OUTPUT-
+cse1051@mpl-8:~$./file input
+Hzllz wzrld.
+wzlczmz tz przgrzmzng zn c.
+hzrz wz zrz gzzng tz szz zbzzt fzlzs.
+wz zrz zszng fznctzzn zn hzzdzr fzlzs
+znd zf thz przgrzm.
+
+*/
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+/*4.Write a function that takes input text file name, output text file name, middle, and offset as
+parameters and copy the contents of input file from position middle - offset to position middle +
+offset into a output text file copy.txt.*/
+
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include"input.h"
+
+
+void copy_content(char source[], char destination [], int mid, int offset);
+
+void main(int argc, char *argv[]){
+    FILE *fptr;
+    fptr=fopen(argv[1],"r");
+    if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+    char ch;
+    int size=0,offset;
+    printf("\nEnter the offset:");
+    scanf("%d",&offset);
+    while((ch=fgetc(fptr))!=EOF)
+    {
+        size++;
+    }
+    fclose(fptr);
+    copy_content(argv[1],argv[2],size/2,offset);
+    read_write_console(argv[2]);
+}
+
+
+
+void copy_content(char source[], char destination [], int mid, int offset){
+    FILE *fptr,*fptr1;
+    char ch;
+    fptr=fopen(source,"r");
+    if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+    fptr1=fopen(destination,"w");
+    if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+    fseek(fptr,mid,SEEK_SET);
+    int i=0;
+    while(i<offset){
+        if((ch=fgetc(fptr))!=EOF)
+            fputc(ch,fptr1);
+        else
+            break;
+        i++;
+    }
+    fseek(fptr,mid-offset,SEEK_SET);
+    i=0;    
+    while(i<offset){
+        if((ch=fgetc(fptr))!=EOF)
+            fputc(ch,fptr1);
+        else
+            break;
+        i++;
+    }
+    fclose(fptr);
+    fclose(fptr1);
+}    
+
+
+
+
+/*OUTPUT-
+cse1051@mpl-8:~$./file input copy
+
+Enter the offset:20
+zzt fzlzs.
+wz zrz zs zrz gzzng tz szz zb
+
+
+*/
+
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*5.Read the following contents from the console and write it to a file.
+“This is ssn college of engineering at Chennai. Chennai is otherwise called as singara Chennai”
+Replace all occurrences of the word “Chennai” with “Tamil Nadu”. Use library functions
+fgetpos( ) and fsetpos( ).
+Output: Final content of the file:
+“This is ssn college of engineering at Tamil Nadu. Tamil Nadu is otherwise called as singara
+Tamil Nadu”*/
+
+
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#include"input.h"
+
+void replace(char file_name[],char source[],char dest[]);
+
+void main(int argc, char *argv[]){
+	FILE *fptr;
+	fptr=fopen(argv[1],"w");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	char source[50],dest[50],str[500],ch;
+	printf("Enter contents of the file:");
+	scanf(" %[^\n]s",str);
+	fprintf(fptr,str);
+	fclose(fptr);
+	printf("\nEnter word to be replaced:");
+	scanf(" %[^\n]s",source);
+	printf("\nEnter word to replace with:");
+	scanf(" %[^\n]s",dest);
+	replace(argv[1],source,dest);
+	read_write_console(argv[1]);
+}
+
+
+void replace(char file_name[],char source[],char dest[]){
+	FILE *fptr;
+	fptr=fopen(file_name,"r");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	char str[500],str_check[100];
+	int len=strlen(source),len1=strlen(dest),i=0;
+	char ch;
+	while((ch=fgetc(fptr))!=EOF){
+		if(ch!=source[0]){
+			str[i]=ch;
+			i++;
+		}
+		else{
+			int pos=ftell(fptr)-1;
+			str_check[0]=(ch);
+			int j=1;
+			while(j<len){
+				ch=fgetc(fptr);
+				str_check[j]=(ch);
+				j++;
+			}
+			str_check[j]='\0';
+			if(strcmp(str_check,source)==0){
+				str[i]='\0';
+				strcat(str,dest);
+				i+=len1;
+				fseek(fptr,pos+len,SEEK_SET);
+			}
+			else{
+				fseek(fptr,pos,SEEK_SET);
+				ch=fgetc(fptr);
+				str[i]=ch;
+				i++;
+			}
+		fseek(fptr,0,SEEK_CUR);
+		}
+	}
+	str[i]='\0';
+	fclose(fptr);
+	fptr=fopen(file_name,"w");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	fprintf(fptr,str);
+	fclose(fptr);
+}	
+
+
+/*OUTPUT-
+cse1051@mpl-8:~$./file replace
+Enter contents of the file:This is ssn college of engineering at Chennai. Chennai is otherwise called as singara Chennai
+
+Enter word to be replaced:Chennai
+
+Enter word to replace with:Tamil Nadu
+This is ssn college of engineering at Tamil Nadu. Tamil Nadu is otherwise called as singara
+Tamil Nadu
+*/
+
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+/*6.Create a telephone directory and perform the following operations: insert, update, delete, search,
+and append telephone details of an individual into the telephone directory. Use a structure to
+represent the telephone record and have necessary attributes such as name, address, phonenumber*/
+
+
+
+
+#include<stdio.h>
+#include<string.h>
+typedef struct{
+	char name[25];
+	char address[100];
+	long int phone_no;
+	int deleted;
+}tele_details;
+typedef union {
+	char name[25];
+	char address[100];
+	long int phone_no;
+}Data;
+
+
+void insert(char file_name[],tele_details entry);
+void update(char file_name[],Data exist,Data updated,char ch);
+void delette(char file_name[],tele_details entry);
+void search(char file_name[],Data data,char ch);
+void print_file(char file_name[]);
+
+
+void main(int argc, char *argv[]){
+	tele_details entry;
+	int choice;
+	char name1[25],name2[25],address1[100],address2[100],ch;
+	long int phone_no1,phone_no2;
+	Data exist,updated;
+	do{
+		printf("\nEnter your choice:\n1.Insert one entry\n2.Update an entry\n3.Delete an entry\n4.Search for an entry\n5.Print telephone directory\n6.Exit\n");
+		scanf("%d",&choice);
+		switch(choice){
+			case 1: printf("\nEnter the details of the entry:\nName:");
+					scanf(" %s",entry.name);
+					printf("\nAddress:");
+					scanf(" %[^\n]s",entry.address);
+					printf("\nTelephone No.:");
+					scanf("%ld",&entry.phone_no);
+					insert(argv[1],entry);
+					break;
+			case 2: printf("\nEnter attribute to be changed:\nn for name\na for address\nt for telephone no.");
+					scanf(" %c",&ch);
+					switch(ch){
+						case 'n':
+						case 'N':printf("\nEnter name to be changed:");
+								 scanf(" %s",exist.name);
+								 printf("\nEnter updated name:");
+								 scanf(" %s",updated.name);
+								 update(argv[1],exist,updated,ch);
+								 break;
+						case 'a':
+						case 'A':printf("\nEnter address to be changed:");
+								 scanf(" %[^\n]s",exist.address);
+								 printf("\nEnter updated address:");
+								 scanf(" %[^\n]s",updated.address);
+								 update(argv[1],exist,updated,ch);
+								 break;
+						case 't':
+						case 'T':printf("\nEnter telephone no. to be changed:");
+								 scanf("%ld",&exist.phone_no);
+								 printf("\nEnter updated telephone no.:");
+								 scanf("%ld",&updated.phone_no);
+								 update(argv[1],exist,updated,ch);
+								 break;
+					}
+					break;
+			case 3:printf("\nEnter the details of the entry to be deleted:\nName:");
+					scanf(" %s",entry.name);
+					printf("\nAddress:");
+					scanf(" %[^\n]s",entry.address);
+					printf("\nTelephone No.:");
+					scanf("%ld",&entry.phone_no);
+					delette(argv[1],entry);
+					break;
+			case 4: printf("Enter attribut to search by:\nn for name\na for address\nt for telephone no.");
+					scanf(" %c",&ch);
+					switch(ch){
+						case 'n':
+						case 'N':printf("\nEnter name to be sarched:");
+								 scanf(" %s",exist.name);
+								 search(argv[1],exist,ch);
+								 break;
+						case 'a':
+						case 'A':printf("\nEnter address to be searched:");
+								 scanf(" %[^\n]s",exist.address);
+								 search(argv[1],exist,ch);
+								 break;
+						case 't':
+						case 'T':printf("\nEnter telephone no. to be searched:");
+								 scanf("%ld",&exist.phone_no);
+								 search(argv[1],exist,ch);
+								 break;
+					}
+					break;
+			case 5: print_file(argv[1]);
+					break;
+		}
+	}while(choice!=6);
+}
+void insert(char file_name[],tele_details entry){
+	FILE *fptr;
+	fptr=fopen(file_name,"a");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	entry.deleted=0;
+	fwrite(&entry,sizeof(entry),1,fptr);
+	fclose(fptr);
+}
+void update(char file_name[],Data exist,Data updated,char ch){
+	FILE *fptr;
+	fptr=fopen(file_name,"r+");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	fseek(fptr,0,SEEK_SET);
+	tele_details entry;
+	int flag=0,size=sizeof(entry);
+	size*=-1;
+	while(fread(&entry,sizeof(entry),1,fptr)>0){
+		if(entry.deleted==0){
+			switch(ch){
+				case 'n':
+				case 'N':if(strcmp(exist.name,entry.name)==0){
+							flag=1;
+							fseek(fptr,size,SEEK_CUR);
+							strcpy(entry.name,updated.name);
+							fwrite(&entry,sizeof(entry),1,fptr);	
+						}
+						break;
+				case 'a':
+				case 'A':if(strcmp(exist.address,entry.address)==0){
+							flag=1;
+							fseek(fptr,size,SEEK_CUR);
+							strcpy(entry.address,updated.address);
+							fwrite(&entry,sizeof(entry),1,fptr);	
+						}
+						 break;
+				case 't':
+				case 'T': if(exist.phone_no==entry.phone_no){
+							flag=1;
+							fseek(fptr,size,SEEK_CUR);
+							entry.phone_no=updated.phone_no;
+							fwrite(&entry,sizeof(entry),1,fptr);	
+						}
+						break;
+			}
+		}
+		fseek(fptr,0,SEEK_CUR);
+		if(flag==1)
+			break;
+	}
+	if(flag==0)
+		printf("\nEntry not found.");
+	fclose(fptr);
+}
+void delette(char file_name[],tele_details entry){
+	FILE *fptr;
+	fptr=fopen(file_name,"r+");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	fseek(fptr,0,SEEK_SET);
+	tele_details entry1,entry2;;
+	int flag=0,size=sizeof(entry1);
+	size*=-1;
+	while(fread(&entry1,sizeof(entry1),1,fptr)>0){
+		if(entry.deleted==0){
+			if((entry.phone_no==entry1.phone_no)&&(strcmp(entry.address,entry1.address)==0)
+			&&(strcmp(entry.name,entry1.name)==0)){
+				flag=1;
+				entry1.deleted=1;
+				fseek(fptr,size,SEEK_CUR);
+				fwrite(&entry1,sizeof(entry1),1,fptr);
+			}
+			fseek(fptr,0,SEEK_CUR);
+			if(flag==1)
+				break;
+		}
+	}
+	if(flag==0)
+		printf("\nEntry not found.");
+	fclose(fptr);
+}
+void search(char file_name[],Data data,char ch){
+	FILE *fptr;
+	fptr=fopen(file_name,"r");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	tele_details entry;
+	int flag=0;
+	while(fread(&entry,sizeof(entry),1,fptr)>0){
+		if(entry.deleted==0){
+			switch(ch){
+				case 'n':
+				case 'N':if(strcmp(data.name,entry.name)==0){
+							flag=1;
+							printf("\nResults of search:\nName:%s\nAddress:%s\nTelephone No.:%ld",entry.name,entry.address,entry.phone_no);	
+						}
+						break;
+				case 'a':
+				case 'A':if(strcmp(data.address,entry.address)==0){
+							flag=1;
+							printf("\nResults of search:\nName:%s\nAddress:%s\nTelephone No.:%ld",entry.name,entry.address,entry.phone_no);		
+						}
+						 break;
+				case 't':
+				case 'T': if(data.phone_no==entry.phone_no){
+							flag=1;
+							printf("\nResults of search:\nName:%s\nAddress:%s\nTelephone No.:%ld",entry.name,entry.address,entry.phone_no);		
+						}
+						break;
+			}
+		}
+		if(flag==1)
+			break;		
+	}	
+	if(flag==0)
+		printf("\nRecord not found.");
+	fclose(fptr);
+}	
+void print_file(char file_name[]){
+	FILE *fptr;
+	fptr=fopen(file_name,"r");
+        if (fptr == NULL)
+	{
+		printf("Cannot open file \nplease enter a filename to save the data\n");
+		exit(0);
+	}
+	tele_details entry;
+	int i=0;
+	while(fread(&entry,sizeof(entry),1,fptr)>0){
+		if(entry.deleted==0){
+			i++;
+			printf("\nRecord %d:\nName:%s\nAddress:%s\nTelephone No.:%ld",i,entry.name,entry.address,entry.phone_no);	
+			i++;		
+		}
+	}
+	if(i==0)
+		printf("\nDirectory is empty.");
+	fclose(fptr);
+}
+
+
+
+/*OUTPUT-
+cse1051@mpl-8:~$./file telephone_directory
+
+
+Enter your choice:
+1.Insert one entry
+2.Update an entry
+3.Delete an entry
+4.Search for an entry
+5.Print telephone directory
+6.Exit
+1
+
+Enter the details of the entry:
+Name:gok
+
+Address:7th street 
+
+Telephone No.:26583842
+
+Enter your choice:
+1.Insert one entry
+2.Update an entry
+3.Delete an entry
+4.Search for an entry
+5.Print telephone directory
+6.Exit
+1
+
+Enter the details of the entry:
+Name:gow
+
+Address:8th street
+
+Telephone No.:26589655
+
+Enter your choice:
+1.Insert one entry
+2.Update an entry
+3.Delete an entry
+4.Search for an entry
+5.Print telephone directory
+6.Exit
+5
+
+Record 1:
+Name:gok
+Address:7th street
+Telephone No.:26583842
+
+
+Record 3:
+Name:gow
+Address:8th street
+Telephone No.:26589655
+
+
+Enter your choice:
+1.Insert one entry
+2.Update an entry
+3.Delete an entry
+4.Search for an entry
+5.Print telephone directory
+6.Exit
+6
+
+*/
+

@@ -1,0 +1,654 @@
+
+
+
+
+/*1.Write a C function that searches a given word in a line of text and returns the frequency count.
+Make use of pointer notation*/
+
+
+
+#include<stdio.h>
+#include<string.h>
+
+void check(char str[],char sub[],char *subt[],int *count)
+{
+	char temp[100];
+	
+	int pos=-1,j=0,i,k=0,c=0;
+
+	for(i=0;i<=strlen(str);i++)
+	{
+	
+		if(*(str+i)!=' '&&*(str+i)!='\0')
+			*(temp+k++)=*(str+i);
+		else
+		
+		{
+		
+			*(temp+k)='\0';
+		
+			if(strcmp(sub,temp)==0)
+			
+				c++;
+		
+			k=0;
+		
+		}
+
+	
+	}
+	*subt=sub;
+	*count=c;
+	
+}
+
+
+void main()
+{
+	
+	char string[100],sub[100],subt[100];
+	int count=0;
+	
+	printf("\nenter the string:");
+	scanf(" %[^\n]",string);
+	printf("\nenter the sub string:");
+	scanf(" %[^\n]",sub);
+	
+	check(string,sub,&subt,&count);
+
+	printf("The no of times %s occurs is %d \n",subt,count);
+
+}
+
+
+
+
+
+/*
+output:
+
+enter the string:hello world this is a program
+
+enter the sub string:is
+
+The no of times is occurs is 1 
+
+*/
+
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*2.Given multiple lines of text, parse the text to separate the tokens. A token is a word separated
+by a space. Store the multiple lines of text as individual strings whose maximum length is
+unspecified. Maintain a pointer to each string within a one-dimensional array of pointers.
+Identify the last line of text in some pre-determined manner. (Eg. END)*/
+
+
+#include <stdio.h>
+#include <string.h>
+void main()
+{
+	
+	char string[10][100];
+	int row=0,i,l,k=0;
+	char *pointer[10];
+	
+	printf("enter multiple lines of text and enter END at the end \n");
+	while(1)
+	{
+		scanf(" %[^\n]",string[row]);
+		l=strlen(string[row]);
+		pointer[row]=string[row];
+		if (string[row][l-3]=='E' && string[row][l-2]=='N' && string[row][l-1]=='D')
+		{
+			string[row][l-4]='\0';
+			break;
+		}
+		row++;
+	}
+
+
+	for(i=0;i<=row;i++)
+	{
+		while(*(pointer[i])!='\0')
+		{
+			if (*(pointer[i]++)==' ')
+				k++;
+
+		}
+		k++;
+	}
+	printf("\nnumber of tokens : %d \n",k);
+}
+
+
+/*
+output:
+
+enter multiple lines of text and enter END at the end 
+hello world this is a sample program to test the pointers.
+in this program we are gonna parse the given multiple line input.END
+
+number of tokens : 23
+*/
+
+
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+
+/*3.implement Example program 11.22 (Adding two tables of numbers) (Page 11.26) of text book
+(Byron Gottfried). Modify the program creating another version so that each element in the
+table c is the larger of the corresponding elements in tables a and b (rather than the sum of the
+corresponding elements in a and b).
+a. Represent each table (each array) as a pointer to a group one dimensional arrays, as in
+example 11.22. Use pointer notation to access the individual table elements.
+b. Represent each table (each array) as a one-dimensional array of pointers and solve the
+problem.*/
+
+
+
+#include <stdio.h>
+#include<stdlib.h>
+
+#define rmax 20
+
+void input(int *a[rmax], int r, int nc)
+{
+    int row,col,c;
+    for(row=0;row<r;row++)
+    {
+        printf("enter elements of row no. %2d\n",row+1);
+        for(col=0;col<nc;col++)
+            scanf("%d",(*(a+row)+col));
+        printf("\n");
+	
+    }
+            
+}
+
+
+
+void larger(int *a[rmax], int *b[rmax], int *c[rmax], int r, int nc)
+{
+    int row,col;
+	
+    for(row=0;row<r;row++)
+        for(col=0;col<nc;col++)
+            if(*(*(a+row)+col)>*(*(b+row)+col))
+				*(*(c+row)+col)=*(*(a+row)+col);
+			else
+				*(*(c+row)+col)=*(*(b+row)+col);
+}
+
+
+
+void display(int *c[rmax],int r, int nc)
+{
+    int row,col;
+    printf("The larger elements are\n");
+    for(row=0;row<r;row++)
+        for(col=0;col<nc;col++)
+            printf("%4d",*(*(c+row)+col));
+        printf("\n");    
+}
+
+
+
+
+void main()
+{
+    
+    int r,nc,row;
+    int *a[rmax],*b[rmax],*c[rmax];
+    
+
+    printf("enter number of rows and columns\n");
+    scanf("%d",&r);
+    scanf("%d",&nc);
+    
+    
+
+    for(row=0;row<r;row++)
+    {
+        a[row]=(int *) malloc (nc*sizeof(int));
+        b[row]=(int *) malloc (nc*sizeof(int));
+        c[row]=(int *) malloc (nc*sizeof(int));
+    }
+    
+
+    input(a,r,nc);
+    input(b,r,nc);
+    larger(a,b,c,r,nc);
+    display(c,r,nc);
+    
+}
+
+/*
+output:
+enter number of rows and columns
+4
+4
+enter elements of row no.  1
+1
+2
+3
+4
+
+enter elements of row no.  2
+5
+6
+7
+8
+
+enter elements of row no.  3
+9
+10
+11
+12
+
+enter elements of row no.  4
+13
+14
+15
+16
+
+enter elements of row no.  1
+17 
+18
+19
+20 
+
+enter elements of row no.  2
+21
+22
+23
+24
+
+enter elements of row no.  3
+25
+26
+27
+28
+
+enter elements of row no.  4
+29
+30
+31
+32
+
+The larger elements are
+  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32
+
+*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+/*4.Modify the program shown in Example 10.28 (displaying the day of the year) (Page 11.37) of
+text book (Byron Gottfried)so that it can determine the number of days between two dates,
+assuming both dates are beyond the base date of January 1, 1900. (Hint: Determine the number
+of days between the first specified date and the base date; then determine the number of days
+between the second specified date and the base date. Finally, determine the difference between
+these two calculated values.)*/
+
+
+
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+long date(int *D)
+{
+
+	long n;
+	int d=*D,m=*(D+1),y=*(D+2)-1900,i;
+	n=(long) (30.42*(m-1))+d;
+	
+
+	if(m==2)
+		n++;
+	else if(m>2&&m<8)
+		n--;
+
+
+	if(y%4==0 && m>2)
+		n++;
+
+
+	for(i=0;i<(y/4);i++)
+		n+=1461;
+
+
+	for(i=0;i<(y%4);i++)
+		n+=365;
+	n++;
+
+
+	if(n>59)
+		n--;
+	return(n);
+}
+
+
+
+void main()
+{
+
+
+	int *d1,*d2;	
+	
+
+	d1=(int *)malloc(3*sizeof(int));
+	d2=(int *)malloc(3*sizeof(int));
+	
+
+	printf("Enter date 1 (dd/mm/yyyy):\n");
+	scanf("%d %d %d",d1,d1+1,d1+2);
+	printf("Enter date 2 (dd/mm/yyyy):\n");
+	scanf("%d %d %d",d2,d2+1,d2+2);
+	printf("Number of days: %d\n",date(d2)-date(d1)+1);
+}
+
+
+
+
+/*
+
+output:
+
+Enter date 1 (dd/mm/yyyy):
+26 02 1993
+Enter date 2 (dd/mm/yyyy):
+22 06 2000
+Number of days: 2675
+
+*/
+
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*5.Modify the program shown in Example 10.30 (compound interest calculations) (Page 11.44) of
+text book (Byron Gottfried) so that it generates a table of F-values for various time periods,
+using different compounding frequencies. Assume that A and n are input values. Display the
+output in the following manner.*/
+
+#include<stdio.h>
+#include<math.h>
+
+
+void table(double (*fn)(double,int,float),double a,int m, float n)
+{
+    double i,f;
+    for(int c=5;c<=15;++c)
+    {
+        i=0.01*c;
+        f=a*(*fn)(i,m,n);
+        printf("  %.2f",f);
+    }
+
+}
+
+double percmpd(double i,int m,float n)
+{
+    double x;
+    x=12*(pow((1+i/m),m*n)-1)/i;
+    return x;
+}
+
+double dailycmpd(double i,int m,float n)
+{
+    double x;
+    x=(pow((1+i/m),m*n)-1)/(pow((1+i/m),m/12)-1);
+    return x;
+}
+
+double contcmpd(double i,int m,float n)
+{
+    double x;
+    x=(exp(i*n)-1)/(exp(i/12)-1);
+    return x;
+}
+
+
+void main()
+{
+
+    float n;
+    int m=1;
+    double a;
+
+
+    printf("\n\nEnter Principal amount:  ");
+    scanf("%lf",&a);
+    printf("\n\nEnter number of years: ");
+    scanf("%f",&n);
+    printf("\n\nPrincipal amount:  %.2lf",a);
+    printf("\n\nNumber of years: %.2f",n);
+    printf("\n\nInterest rate:   ");
+    printf(" 5%\t   6%\t  7%\t    8%\t     9%\t       10%\t 11%\t   12%\t 13%\t14%\t  15%");
+    printf("\n\nFrequency of\ncompounding\n\nAnnually     ");
+
+
+    table(percmpd,a,m,n);
+    m=2;
+    printf("\n\nSemiannual   ");
+    table(percmpd,a,m,n);
+    m=4;
+    printf("\n\nQuarterly    ");
+    table(percmpd,a,m,n);
+    m=12;
+    printf("\n\nMonthly      ");
+    table(percmpd,a,m,n);
+    m=360;
+    printf("\n\nDaily        ");
+    table(dailycmpd,a,m,n);
+    m=0;
+    printf("\n\nContinuously ");
+    table(contcmpd,a,m,n);
+}
+
+
+
+/*
+
+ouput:
+
+Enter Principal amount:  1000
+
+
+Enter number of years: 5
+
+
+Principal amount:  1000.00
+
+Number of years: 5.00
+
+Interest rate:    5%	   6%	  7%	    8%	     9%	       10%	 11%	   12%	 13%	14%	  15%
+
+Frequency of
+compounding
+
+Annually       66307.58  67645.12  69008.87  70399.21  71816.53  73261.20  74733.62  76234.17  77763.25  79321.25  80908.57
+
+Semiannual     67220.29  68783.28  70388.36  72036.64  73729.26  75467.36  77252.12  79084.77  80966.54  82898.69  84882.52
+
+Quarterly      67688.94  69371.00  71104.83  72892.11  74734.56  76633.97  78592.19  80611.12  82692.73  84839.05  87052.16
+
+Monthly        68006.08  69770.03  71592.90  73476.86  75424.14  77437.07  79518.08  81669.67  83894.45  86195.13  88574.51
+
+Daily          68023.58  69796.08  71629.55  73526.35  75488.91  77519.77  79621.58  81797.08  84049.14  86380.74  88794.99
+
+*/
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+#include<ctype.h>
+
+double *val[6];
+
+void table(double (*p)(double i,int m,double n), double a,int m,double i,int t)
+{
+int j;
+double f;
+for(j=1;j<=50;j++)
+	{
+	f=a*(*p)(i,m,j);
+	*(val[t]+j-1)=f;
+	}
+
+}
+
+
+double percmpd(double i,int m,double n)
+{
+    double x;
+    x=12*(pow((1+i/m),m*n)-1)/i;
+    return x;
+}
+
+double dailycmpd(double i,int m,double n)
+{
+    double x;
+    x=(pow((1+i/m),m*n)-1)/(pow((1+i/m),m/12)-1);
+    return x;
+}
+
+double contcmpd(double i,int m,double n)
+{
+    double x;
+    x=(exp(i*n)-1)/(exp(i/12)-1);
+    return x;
+}
+
+
+
+
+
+
+void main()
+{
+	//declaration
+	int m[6]={1,2,4,12,360,0},t,k;
+	double i,a;
+	char choice;
+
+	//user input
+	printf("\nMonthly Amount : ");
+	scanf("%lf",&a);
+	printf("Interest : ");
+	scanf("%lf",&i);
+	i*=0.01;
+	printf("\nFrequency of compounding :\n");
+
+	//execution
+	for(t=0;t<6;t++)
+		val[t]=(double *) malloc (50 * sizeof(double));
+	for(t=0;t<6;t++)
+	{
+		if(t<4) table(percmpd,a,m[t],i,t);
+		else if(t==4) table(dailycmpd,a,m[t],i,t);
+		else table(contcmpd,a,m[t],i,t);
+	}
+
+printf("Terms		Annualy	  	Semiannualy   	Quaterly  	Monthly   	Daily   	Continuous\n");
+printf("(years)\n");
+
+for(t=0;t<50;t++)
+	{
+		printf("%d	 \t",t+1);
+		for(k=0;k<6;k++)
+			printf("%.1lf\t\t",*(val[k]+t));
+		printf("\n");
+	}
+
+}
+
+
+
+
+
+
+/*
+
+ouput:
+
+
+Monthly Amount : 1000
+Interest : 5
+
+Frequency of compounding :
+Terms		Annualy	  	Semiannualy   	Quaterly  	Monthly   	Daily   	Continuous
+(years)
+1	 	12000.0		12150.0		12226.9		12278.9		12279.4		12279.4		
+2	 	24600.0		24915.1		25076.7		25185.9		25188.4		25188.5		
+3	 	37830.0		38326.4		38581.1		38753.3		38759.2		38759.4		
+4	 	51721.5		52416.7		52773.5		53014.9		53025.7		53026.0		
+5	 	66307.6		67220.3		67688.9		68006.1		68023.6		68024.2		
+6	 	81623.0		82773.3		83364.3		83764.3		83790.4		83791.3		
+7	 	97704.1		99113.7		99838.2		100328.7		100365.5		100366.8		
+8	 	114589.3		116281.3		117151.3		117740.5		117790.5		117792.2		
+9	 	132318.8		134318.1		135346.5		136043.2		136108.7		136111.0		
+10	 	150934.7		153267.9		154468.7		155282.3		155366.1		155369.0		
+11	 	170481.4		173177.1		174565.0		175505.7		175610.7		175614.4		
+12	 	191005.5		194094.2		195685.2		196763.7		196893.3		196897.7		
+13	 	212555.8		216070.2		217881.3		219109.4		219266.9		219272.3		
+14	 	235183.6		239158.8		241208.2		242598.3		242787.6		242794.1		
+15	 	258942.8		263416.2		265723.5		267288.9		267514.1		267521.9		
+16	 	283889.9		288901.7		291487.8		293242.8		293508.3		293517.5		
+17	 	310084.4		315677.3		318564.6		320524.5		320835.1		320845.9		
+18	 	337588.6		343808.5		347020.9		349202.0		349563.0		349575.5		
+19	 	366468.0		373363.8		376926.8		379346.7		379763.6		379778.0		
+20	 	396791.4		404415.3		408356.4		411033.7		411512.5		411529.1		
+21	 	428631.0		437038.8		441387.1		444341.8		444889.1		444908.1		
+22	 	462062.6		471313.9		476100.6		479354.0		479976.9		479998.5		
+23	 	497165.7		507324.2		512582.6		516157.5		516863.5		516888.0		
+24	 	534024.0		545157.5		550923.2		554844.0		555641.2		555668.8		
+25	 	572725.2		584906.1		591217.0		595509.7		596406.9		596438.0		
+26	 	613361.4		626667.0		633563.7		638256.0		639262.6		639297.5		
+27	 	656029.5		670542.0		678067.7		683189.2		684315.4		684354.4		
+28	 	700831.0		716638.2		724838.9		730421.3		731678.0		731721.5		
+29	 	747872.5		765068.0		773993.0		780069.9		781468.6		781517.1		
+30	 	797266.2		815949.5		825651.2		832258.6		833812.0		833865.7		
+31	 	849129.5		869407.0		879941.1		887117.4		888838.8		888898.4		
+32	 	903586.0		925570.7		936996.9		944782.9		946686.7		946752.6		
+33	 	960765.3		984577.7		996959.4		1005398.6		1007500.4		1007573.1		
+34	 	1020803.5		1046572.0		1059976.7		1069115.6		1071431.8		1071512.0		
+35	 	1083843.7		1111704.7		1126204.5		1136092.4		1138640.8		1138729.0		
+36	 	1150035.9		1180134.7		1195806.2		1206495.9		1209295.4		1209392.3		
+37	 	1219537.7		1252029.1		1268953.9		1280501.4		1283572.3		1283678.6		
+38	 	1292514.5		1327563.0		1345828.0		1358293.1		1361657.2		1361773.7		
+39	 	1369140.3		1406920.9		1426618.6		1440064.9		1443745.3		1443872.8		
+40	 	1449597.3		1490296.3		1511525.0		1526020.2		1530041.9		1530181.2		
+41	 	1534077.2		1577892.5		1600757.0		1616373.1		1620762.6		1620914.7		
+42	 	1622781.0		1669923.3		1694535.0		1711348.7		1716134.4		1716300.2		
+43	 	1715920.1		1766613.2		1793090.6		1811183.4		1816395.7		1816576.2		
+44	 	1813716.1		1868198.0		1896667.1		1916125.8		1921797.1		1921993.5		
+45	 	1916401.9		1974925.5		2005520.3		2026437.3		2032602.1		2032815.7		
+46	 	2024222.0		2087056.1		2119919.1		2142392.5		2149087.9		2149319.8		
+47	 	2137433.1		2204863.3		2240145.9		2264280.3		2271545.5		2271797.2		
+48	 	2256304.7		2328634.5		2366497.8		2392404.0		2400281.3		2400554.2		
+49	 	2381120.0		2458671.7		2499286.7		2527082.8		2535617.0		2535912.7		
+50	 	2512175.9		2595291.9		2638840.6		2668652.0		2677891.1		2678211.2	
+
+
+
+*/
+
+

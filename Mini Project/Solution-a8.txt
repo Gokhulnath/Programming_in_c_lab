@@ -1,0 +1,168 @@
+
+#include<stdio.h>
+#include<math.h>
+#include<string.h>
+
+struct centipede{
+	int length[100];
+	int leadPos[100][100];
+	int direction[100][100];
+	int grid[30][30];
+	char direc[10];
+}centiped;
+
+
+	
+
+
+void Initdirection(int N)
+{
+	for(int i=0;i<N;++i)
+	{
+		if(centiped.direc[i]=='R')
+		{
+			centiped.direction[i][0]=1;
+			centiped.direction[i][1]=0;
+		}
+		else if(centiped.direc[i]=='L')
+		{
+			centiped.direction[i][0]=-1;
+			centiped.direction[i][1]=0;
+		}
+		else if(centiped.direc[i]=='U')
+		{
+			centiped.direction[i][0]=0;
+			centiped.direction[i][1]=1;
+		}
+		else
+		{
+			centiped.direction[i][0]=0;
+			centiped.direction[i][1]=-1;
+		}
+	}
+}
+
+
+void DivideCentipede(int pos,int x,int y,int N)
+{
+	int length1,length2;
+	length1=centiped.direction[pos][0]!=0?(centiped.leadPos[pos][0]-x):(centiped.leadPos[pos][1]-y);
+	length2=centiped.length[pos]-1-length1;
+	if(length2>0)
+	{
+		centiped.length[N]=length2;
+		centiped.leadPos[N][0]=x-centiped.direction[pos][0];
+		centiped.leadPos[N][1]=y-centiped.direction[pos][1];
+		centiped.direction[N][0]=centiped.direction[pos][0];
+		centiped.direction[N][1]=centiped.direction[pos][1];
+		++N;
+	}
+}
+
+void search(int N)
+{
+	int canexist=0;
+	while(!canexist)
+	{
+		canexist=1;
+		for(int i=0;i<N;++i)
+		{
+			if(centiped.length[i]>0)
+			{
+				int p1,p2;
+				p1=centiped.direction[i][0]!=0?0:1;
+				p2=p1==0?1:0;
+				if(!(centiped.leadPos[i][p1]+centiped.direction[i][p1]>=0&&centiped.leadPos[i][p1]+centiped.direction[i][p1]<=29))
+				{
+					--centiped.length[i];
+				}
+				else if(centiped.grid[centiped.leadPos[i][0]+centiped.direction[i][0]][centiped.leadPos[i][1]+centiped.direction[i][1]]==1)
+				{
+					--centiped.length[i];
+				}
+				else
+				{
+					int getCollision=0;
+					for(int j=0;j<N;++j)
+					{
+						if(j!=i&&centiped.length[j]!=0)
+						{
+							if(centiped.leadPos[i][p1]+centiped.direction[i][p1]==centiped.leadPos[j][p1])
+							{
+								if((centiped.leadPos[j][p2]-centiped.leadPos[i][p2])*(centiped.leadPos[j][p2]-centiped.direction[j][p2]*(centiped.length[j]-1)-centiped.leadPos[i][p2])<=0)
+								{
+									--centiped.length[i];
+									getCollision=1;
+									int x,y;
+									x=centiped.leadPos[i][0]+centiped.direction[i][0];
+									y=centiped.leadPos[i][1]+centiped.direction[i][1];
+									centiped.grid[x][y]=1;
+									DivideCentipede(j,x,y,N);
+									break;
+								}
+							}
+						}
+					}
+					if(!getCollision)
+					{
+						centiped.leadPos[i][p1]+=centiped.direction[i][p1];
+					}
+				}
+			}
+		}
+		for(int m=0;m<N;++m)
+		{
+			if(centiped.length[m]!=0)
+			{
+				canexist=0;
+				break;
+			}
+		}
+	}
+}
+
+void main()
+{
+	int line1[30]={0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2};
+	int line2[30]={0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9};
+	int line3[30]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29};
+	int N;
+	scanf("%d",&N);
+	for(int i=0;i<N;i++)
+	{
+		scanf("%s %d %d %d",&centiped.direc[i],&centiped.length[i],&centiped.leadPos[i][0],&centiped.leadPos[i][1]);
+	}
+	
+	
+	Initdirection(N);
+	search(N);
+
+	printf("  ");
+	for(int i=0;i<30;++i)
+		printf(" %d",line1[i]);
+	printf("\n");
+	printf("  ");
+	for(int i=0;i<30;++i)
+		printf(" %d",line2[i]);
+	printf("\n");
+	for(int i=0;i<30;++i)
+	{
+		if((29-i)<10)
+		{
+				printf("0%d",line3[29-i]);
+		}
+		else
+		{
+				printf("%d",line3[29-i]);
+		}
+		for(int j=0;j<30;++j)
+		{
+			if(centiped.grid[i][j]==0)
+				printf(" .");
+			else
+				printf(" X");
+		}
+		printf("\n");
+	}
+	
+}

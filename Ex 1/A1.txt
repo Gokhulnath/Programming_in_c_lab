@@ -1,0 +1,512 @@
+
+
+
+
+/*Check whether the given integer is odd or even without condition*/
+
+
+#include<stdio.h>
+void main(){
+	int  num;
+	printf("Enter the number:");
+	scanf("%d",&num);
+	num%2&&printf("Odd")||printf("Even");
+}
+
+/*
+output:
+Enter the number:5
+Odd
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Check whether the given integer is odd or even*/
+
+
+#include<stdio.h>
+
+void main()
+{
+	int  num;
+	printf("Enter the number:");
+	scanf("%d",&num);
+	if((num%2)==0)
+		{
+			printf("even");
+		}
+	else
+		{
+			printf("odd");
+		}
+}
+
+
+/*
+output:
+Enter the number:25
+Odd
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Convert the given temperature in Celsius to Fahrenheit and Kelvin scale.*/
+
+#include<stdio.h>
+
+
+void main()
+{
+	float kelvin,fahn,cel;
+	printf("enter the temperature in celcius: \n",&cel);
+	scanf("%f",&cel);
+	fahn=cel*1.8+32.0;
+	kelvin=cel+273.15;
+	printf("%f celsius in fahrenheit:%f\n",cel,fahn);
+	printf("\n%f celsius in kelvin:%f",cel,kelvin);
+}
+
+/*
+output:
+enter the temperature in celcius: 
+100
+100.000000 celsius in fahrenheit:212.000000
+
+100.000000 celsius in kelvin:373.149994
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Modify (1) to set a flag to 1 if number is odd; 0 if even*/
+
+#include<stdio.h>
+
+
+void main()
+{
+	int n,flag;
+	printf("enter the number:" );
+	scanf("%d",&n);
+	flag=(n%2)?1:0;
+	printf("%d",flag);
+}
+
+/*
+output:
+enter the number:100
+0
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Find the net salary of an employee by getting the basic pay (BP) as input. Compute the
+net pay*/
+
+#include<stdio.h>
+
+void main()
+{
+	float bp,da,hra,pf,gp,cca,ins,deduct,np;
+	printf("enter basic pay: ");
+	scanf("%f",&bp);
+	da=0.88*bp;
+	hra=0.08*bp;
+	pf=0.1*bp;
+	cca=1000.0;
+	ins=2000.0;
+	gp=bp+da+hra+cca;
+	deduct=ins+pf;
+	np=gp-deduct;
+	printf("net pay:%f",np);
+}
+
+/*
+output:
+enter basic pay: 10000
+net pay:17600.000000
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Modify (4) to set HRA based on type city which is input (Metro 10%; Corporation 8%;
+Taluk 5%); to set CCA based on designation (Worker (W) 1000; Engineer (E) 2000;
+Manager (M) 5000)*/
+
+#include<stdio.h>
+
+
+void main()
+{
+	float bp,da,hra,pf,gp,cca,ins,deduct,np;
+	printf("enter basic pay:" );
+	scanf("%f",&bp);
+	char city,degn;
+	da=0.88*bp;
+	pf=0.1*bp;
+	ins=2000.0;
+	printf("enter city:");
+	scanf("%s",&city);
+	if(city=="metro")
+	 	hra=0.1*bp;
+	else if(city=="corporation")
+	  		hra=0.08*bp;
+	else if(city=="taluk")
+	 		hra=0.05*bp;
+	printf("enter designation:");
+	scanf("%s",&degn);
+	if(degn=="W")
+	 	cca=1000.0;
+	else if(degn=="E")
+	 		cca=2000.0;
+	else if(degn=="m")
+	 		cca=5000.0;
+	gp=bp+da+hra+cca;
+	deduct=ins+pf;
+	np=gp-deduct;
+	printf("net pay:%f",np);
+}
+
+/*
+output:
+enter basic pay:1000
+enter city:metro    
+enter designation:m
+net pay:-1220.000000
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+
+/*Write a C program that will ask the user for a whole number N between 3 and 10 and print an egg
+timer of size N*/
+
+#include<stdio.h>
+void main(){
+ int n,i,j;
+ printf("Enter the no. of elements:");
+ scanf("%d",&n);
+ for (i=1;i<=n;i++){
+   for (j=1;j<=i;j++)
+     printf(" ");
+   for ( j=1;j<=n-i+1;j++)
+   printf("* ");
+   printf("\n");
+ }
+ for (i=2;i<=n;i++){
+   for ( j=1;j<=n-i+1;j++)
+     printf(" ");
+   for ( j=1;j<=i;j++)
+     printf("* ");
+   printf("\n");
+ }
+}
+
+/*
+output:
+Enter the no. of elements:10 
+ * * * * * * * * * * 
+  * * * * * * * * * 
+   * * * * * * * * 
+    * * * * * * * 
+     * * * * * * 
+      * * * * * 
+       * * * * 
+        * * * 
+         * * 
+          * 
+         * * 
+        * * * 
+       * * * * 
+      * * * * * 
+     * * * * * * 
+    * * * * * * * 
+   * * * * * * * * 
+  * * * * * * * * * 
+ * * * * * * * * * * 
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*program that computes sum of N integers(Version 1)*/
+
+#include<stdio.h>
+void main()
+{
+int n,sum=0,k,i;
+printf("enter the no of elements to be entered:");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+  {
+		   printf("enter the number:");
+		   scanf("%d",&k);
+		   sum+=k;
+  }
+printf("THE SUM IS %d",sum);
+}
+
+/*
+output:
+enter the no of elements to be entered:5
+enter the number:5
+enter the number:5
+enter the number:4
+enter the number:3
+enter the number:2
+THE SUM IS 19
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Get inputs for N, multiple times until -999 is given (Version 2)*/
+
+#include<stdio.h>
+void main()
+{
+int sum=0,k,i;
+char c;
+do
+    {
+         printf("enter the number:");
+         scanf("%d",&k);
+         if(k!=-999)
+         sum+=k;
+    }while(k!=-999);
+printf("THE SUM IS %d",sum);
+}
+
+/*
+output:
+enter the number:56
+enter the number:54
+enter the number:12
+enter the number:-999
+THE SUM IS 122
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Get inputs for N, multiple times until ‘STOP’ is given (Version 3)*/
+
+#include<stdio.h>
+void main()
+{
+int sum=0,k,i;
+char c;
+do
+    {
+         printf("enter the number:");
+         scanf("%d",&k);
+         sum+=k;
+         printf("Do you want to continue:??if yes enter y else enter n::");
+         scanf(" %c",&c);
+    }while(c=='y'||c=='Y');
+printf("THE SUM IS %d",sum);
+}
+
+
+/*
+output:
+enter the number:5
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:54
+Do you want to continue:??if yes enter y else enter n::y45
+enter the number:Do you want to continue:??if yes enter y else enter n::n
+THE SUM IS 104
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Validate N to be a positive number less that 100. (Version 4)*/
+
+
+#include<stdio.h>
+void main()
+{
+int sum=0,k,i;
+char c;
+do
+    {
+         printf("enter the number:");
+		 scanf("%d",&k);
+		 if(k>=1 && k<100)
+		    sum+=k;
+		 else
+		    printf("\ninvalid");
+		 printf("Do you want to continue:??if yes enter y else enter n::");
+		 scanf(" %c",&c);
+        }while(c=='y'||c=='Y');
+printf("THE SUM IS %d",sum);
+}
+
+/*
+output:
+enter the number:50
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:102
+
+invalidDo you want to continue:??if yes enter y else enter n::y
+enter the number:99
+Do you want to continue:??if yes enter y else enter n::n
+THE SUM IS 149
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Print error message for invalid input and exit (Version 5)*/
+
+#include<stdio.h>
+void main()
+{
+int sum=0,k,i;
+char c;
+do
+    {
+         printf("enter the number:");
+		 scanf("%d",&k);
+		 if(k>=1 && k<100)
+		    sum+=k;
+		 else
+		     {
+		         printf("\ninvalid");
+		         break;
+             }
+     printf("Do you want to continue:??if yes enter y else enter n::");
+     scanf(" %c",&c);
+     }while(c=='y'||c=='Y');
+printf("THE SUM IS %d",sum);
+}
+
+/*
+output:
+enter the number:12
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:15
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:105
+
+invalid
+THE SUM IS 27
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*If input is invalid, print message and ask for another input. (Version 6)*/
+
+#include<stdio.h>
+void main()
+{
+int sum=0,k,i;
+char c;
+do
+    {
+         printf("enter the number:");
+		 scanf("%d",&k);
+		 if(k>=1 && k<100)
+		    sum+=k;
+		 else
+		     {
+		         printf("invalid\n");
+		         do
+		            {
+		             printf("\nenter the number:");
+		         scanf("%d",&k);
+		            }while(k<=0 || k>=100);
+		         sum+=k;             
+              }    
+     printf("\nDo you want to continue:??if yes enter y else enter n::");
+     scanf(" %c",&c);
+        }while(c=='y'||c=='Y');
+printf("\nTHE SUM IS %d",sum);
+}
+
+/*
+output:
+enter the number:50
+
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:62
+
+Do you want to continue:??if yes enter y else enter n::y
+enter the number:105
+invalid
+
+enter the number:20
+
+Do you want to continue:??if yes enter y else enter n::n
+
+THE SUM IS 132
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+/*Design a calculator to perform the operations namely addition, subtraction,
+multiplication, division and square of a number. (Hint: Provide operation options for the
+user to choose, after getting two numbers of type float)*/
+
+
+#include<stdio.h>
+#include<math.h>
+void main(){
+
+ float oprd1,oprd2,ans;
+ char oprn;
+ printf("Enter the operation:");
+ scanf("%f",&oprd1);
+ oprn=getchar();
+ scanf("%f",&oprd2);
+ switch(oprn){
+	   case '+':ans=oprd1+oprd2;
+		            break;
+	   case '-':ans=oprd1-oprd2;
+		            break;
+	   case '*':ans=oprd1*oprd2;
+		            break;
+	   case '/':ans=oprd1/oprd2;
+		            break;
+	   case '^':ans=pow(oprd1,oprd2);
+		            break;
+ }
+ printf("%f %c %f = %f",oprd1,oprn,oprd2,ans);
+ printf("\n");
+}
+
+/*
+output:
+Enter the operation:4+5
+4.000000 + 5.000000 = 9.000000
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+
+ /*Write a C program to check if a number has three consecutive 5s. If yes, print YES, else print
+NO.*/
+
+#include<stdio.h>
+void main(){
+ int n,r,t=0;
+ printf("Enter the number:");
+ scanf("%d",&n);
+ while(n){
+	   r=n%10;
+	   n=n/10;
+	   if(r==5)
+		 t+=1;
+	   else
+		 t=0;
+	   if(t==3){
+		 printf("Yes");
+		 break;}
+   }
+ if(t<3)
+   	printf("No");
+ printf("\n");
+}
+
+/*
+output:
+Enter the number:4995553
+Yes
+*/
+
+/*-----------------------------------------------------------------------------------------------------*/
+

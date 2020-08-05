@@ -1,0 +1,464 @@
+/*
+
+
+Define a data type for Date having 3 members viz. day, month and year. Define a data
+type for Student with members rollnum, name, marks[5], totalMarks, rank, dateofbirth
+(of type Date), age, gender. Use a enumerated data type for gender with values MALE,
+FEMALE, TRANSGENDER. Write a C program that gets data for N students and
+computes and display the rank of the students. Use array of structures. Write a C function
+that takes an array of structures of students and compute their rank. If total marks of M
+students are same and get the same rank R, then assign R+M as the rank for next student.
+Write another function that takes two Date structures and returns the age. Use this
+function to set the age of the students.
+
+*/
+
+#include<stdio.h>
+
+struct date {
+	int day;
+	int month;
+	int year;
+};
+
+	enum type_of_gender{male,female,transgender};
+
+struct details{
+	char name[100];
+	struct date dob;
+	int age;
+	enum type_of_gender gender;
+	int rollnum;
+	int marks[5];
+	int total_marks;
+	int rank;
+	
+}*student;
+
+int age(int a);
+void ranking(int size);
+void display(int num,int size);
+
+void main()
+{
+	int N,num;
+	char genders;
+	char opinion;
+	do
+	{
+		printf("\nEnter the number of students: ");
+		scanf("%d",&N);
+		student=(struct details*) malloc(N*sizeof(struct details));
+		for(int i=0;i<N;i++)
+		{
+			printf("\n---------------------------------------------------------------------------------------\n");
+			printf("\nPlease enter the students name:");
+			scanf("%s",&(student+i)->name);
+			(student+i)->age=age(i);
+			printf("\nPlease enter the student's gender(male(m),female(f),transgender(t)):");
+			scanf("%s",&genders);
+			switch(genders)
+			{
+				case 'm':
+				case 'M':
+							(student+i)->gender=male;
+							break;
+				case 'f':
+				case 'F':
+							(student+i)->gender=female;
+							break;
+				case 't':
+				case 'T':
+							(student+i)->gender=transgender;
+							break;
+			}
+			printf("\nPlease enter the student's rollno:");
+			scanf("%d",&(student+i)->rollnum);
+			for(int j=0;j<5;j++)
+			{
+				printf("\nPlease enter the mark of subject %d :",j+1);
+				scanf("%d",&(student+i)->marks[i]);
+				(student+i)->total_marks+=(student+i)->marks[i];
+			}
+			
+		}
+		ranking(N);
+		printf("\n---------------------------------------------------------------------------------------\n");
+		printf("\nPlease enter the roll number of the particular student u want to get the transcript:\n");
+		scanf("%d",&num);
+		display(num,N);
+		printf("\nDo you want to continue(y/n)?\n");
+		scanf("%s",&opinion);
+		printf("\n---------------------------------------------------------------------------------------\n");
+	}while(opinion=='y' || opinion=='Y');
+}
+
+int age(int a)
+{
+	struct date today;
+	int age;
+	printf("\nPlease enter the student's birthdate (dd/mm/yyyy): ");
+	scanf("%d/%d/%d",&(student+a)->dob.day,&(student+a)->dob.month,&(student+a)->dob.year);
+	printf("\nPlease enter today's date (dd/mm/yyyy): ");
+	scanf("%d/%d/%d",&today.day,&today.month,&today.year);
+	if((today.month)>((student+a)->dob.month))
+	{
+		age=((today.year)-((student+a)->dob.year));
+	}
+	else
+	{
+		age=((today.year)-((student+a)->dob.year))-1;
+	}
+	
+	return age;
+}
+
+void ranking(int size)
+{
+	struct details *temp;
+	temp=(struct details*) malloc(size*sizeof(struct details));
+	for (int i = 0; i < size - 1; i++)
+    {
+        for (int j = 0; j < (size - 1-i); j++)
+        {
+        	if((student+i)->total_marks < (student+(j+1))->total_marks)
+        	{
+        		memcpy((temp+1),(student+j), sizeof *(temp+1));
+        		memcpy((student+j),(student+(j+1)), sizeof *(student+j));
+        		memcpy((student+(j+1)),(temp+1), sizeof *(student+(j+1)));
+			}
+			
+    	}
+	}
+	for (int i = 0; i < size; i++)
+    {
+       	(student+i)->rank=i+1;
+	}
+}
+
+void display(int num,int size)
+{
+	printf("\n---------------------------------------------------------------------------------------\n");
+	printf("\n-----------------------------student transcript----------------------------------------\n");
+	printf("\n---------------------------------------------------------------------------------------\n");
+	for(int i=0;i<size;i++)
+	{
+		if((student+i)->rollnum==num)
+		{
+			printf("Name = %s\n",(student+i)->name);
+			printf("Roll number = %d\n",(student+i)->rollnum);
+			printf("Date of birth = %d/%d/%d\n",(student+i)->dob.day,(student+i)->dob.month,(student+i)->dob.year);
+			printf("\Age = %d\n",(student+i)->age);
+			printf("Gender: ");
+			switch((student+i)->gender)
+			{
+				case 0:printf("Male");
+						break;
+				case 1:printf("Female");
+						break;
+				case 2:printf("Transgender");
+						break;
+			}
+			printf("\nTotal Marks = %d\n",(student+i)->total_marks);
+			printf("Rank = %d\n",(student+i)->rank);
+			printf("\n---------------------------------------------------------------------------------------\n");
+
+		}
+	}
+}
+
+
+
+/*
+
+output:
+
+Enter the number of students: 5
+
+---------------------------------------------------------------------------------------
+
+Please enter the students name:a
+
+Please enter the student's birthdate (dd/mm/yyyy): 22/06/2000
+
+Please enter today's date (dd/mm/yyyy): 14/04/2019
+
+Please enter the student's gender(male(m),female(f),transgender(t)):m
+
+Please enter the student's rollno:100
+
+Please enter the mark of subject 1 :100
+
+Please enter the mark of subject 2 :100
+
+Please enter the mark of subject 3 :100
+
+Please enter the mark of subject 4 :100
+
+Please enter the mark of subject 5 :100
+
+---------------------------------------------------------------------------------------
+
+Please enter the students name:b
+
+Please enter the student's birthdate (dd/mm/yyyy): 14/01/2001
+
+Please enter today's date (dd/mm/yyyy): 14/04/2019
+
+Please enter the student's gender(male(m),female(f),transgender(t)):f
+
+Please enter the student's rollno:101
+
+Please enter the mark of subject 1 :99
+
+Please enter the mark of subject 2 :95
+
+Please enter the mark of subject 3 :96
+
+Please enter the mark of subject 4 :92
+
+Please enter the mark of subject 5 :100
+
+---------------------------------------------------------------------------------------
+
+Please enter the students name:c
+
+Please enter the student's birthdate (dd/mm/yyyy): 11/05/2000
+
+Please enter today's date (dd/mm/yyyy): 14/04/2019
+
+Please enter the student's gender(male(m),female(f),transgender(t)):m
+
+Please enter the student's rollno:102
+
+Please enter the mark of subject 1 :100
+
+Please enter the mark of subject 2 :95
+
+Please enter the mark of subject 3 :89
+
+Please enter the mark of subject 4 :85
+
+Please enter the mark of subject 5 :65
+
+---------------------------------------------------------------------------------------
+
+Please enter the students name:d
+
+Please enter the student's birthdate (dd/mm/yyyy): 22/08/2000
+
+Please enter today's date (dd/mm/yyyy): 14/04/2019
+
+Please enter the student's gender(male(m),female(f),transgender(t)):m
+
+Please enter the student's rollno:103
+
+Please enter the mark of subject 1 :100
+
+Please enter the mark of subject 2 :95
+
+Please enter the mark of subject 3 :99
+
+Please enter the mark of subject 4 :96
+
+Please enter the mark of subject 5 :93
+
+---------------------------------------------------------------------------------------
+
+Please enter the students name:e
+
+Please enter the student's birthdate (dd/mm/yyyy): 14/06/2000
+
+Please enter today's date (dd/mm/yyyy): 14/04/2019
+
+Please enter the student's gender(male(m),female(f),transgender(t)):m
+
+Please enter the student's rollno:104
+
+Please enter the mark of subject 1 :100
+
+Please enter the mark of subject 2 :85
+
+Please enter the mark of subject 3 :80
+
+Please enter the mark of subject 4 :87
+
+Please enter the mark of subject 5 :90
+
+---------------------------------------------------------------------------------------
+
+Please enter the roll number of the particular student u want to get the transcript:
+102
+
+---------------------------------------------------------------------------------------
+
+-----------------------------student transcript----------------------------------------
+
+---------------------------------------------------------------------------------------
+Name = c
+Roll number = 102
+Date of birth = 11/5/2000
+Age = 18
+Gender: Male
+Total Marks = 434
+Rank = 4
+
+---------------------------------------------------------------------------------------
+
+Do you want to continue(y/n)?
+n
+
+
+
+
+*/
+
+
+/*
+
+Modify the piglatin generator presented in Example 9.14 of text book by Byron Gottfried,
+so that it will accept multiple lines of text. Represent each line of text with a separate
+structure. Include the following three members within each structure:
+(a) The original line of text
+(b) The number of words within the line
+(c) The modified line of text
+
+*/
+
+#include<stdio.h>
+#include<string.h> 
+#include<ctype.h>
+#define size 50
+typedef struct{
+	char original_text[50];
+	char piglatin_text[100];
+	int no_of_words;
+}text;
+void convert(char word[]){
+	int i,j,length;
+	char temp[50];
+	   for(i=0;word[i];i++){ 
+        word[i]=tolower(word[i]);} 
+        for(i=0;word[i];i++){ 
+        while((word[i]=='\0')||(isalpha(word[i])==0)) 
+        {for(j=i;word[j];j++) 
+        word[j]=word[j+1];} 
+    } 
+    length=sizeof(word); 
+    int ind=0,flag=0,start; 
+    for(i=0;word[i];i++){ 
+        switch(word[i]){ 
+            case 'a': 
+            case 'e': 
+            case 'i': 
+            case 'o': 
+            case 'u':flag=1;break; 
+            default:temp[ind]=word[i];ind++; 
+        } 
+        if(flag){start=i;break;} 
+    } 
+    if(flag){ 
+    for(i=0,j=start;word[j];i++,j++){ 
+        temp[i]=word[j];     
+    } 
+    for(j=0;j<start;j++,i++){ 
+        temp[i]=word[j]; 
+    } 
+    } 
+    temp[i]='a'; 
+    temp[++i]='\0'; 
+    strcpy(word,temp);
+
+}
+void count_words(text *str){
+	int i,ind=0;
+	char word[size];
+	for(i=0;str->original_text[i];i++){
+		if(str->original_text[i]!=' '){
+			word[ind]=str->original_text[i];
+			ind++;
+		}
+		else{
+			word[ind]='\0';
+			convert (word);
+			ind=0;
+			strcat(str->piglatin_text,word);
+			strcat(str->piglatin_text," ");
+			str->no_of_words+=1;
+		}
+	}
+	str->no_of_words++;
+	word[ind]='\0';
+	convert(word);
+	strcat(str->piglatin_text,word);
+	strcat(str->piglatin_text,".");
+}
+void main(){
+	text *array;
+	int num=-1,i;
+	char opinion;
+	array=(text *)malloc(sizeof(text));
+	do
+	{
+		do{
+			num++;
+			if(num>0)
+				array=(text *)realloc(array,sizeof(text)*(num+1));
+			printf("\nPlease enter the line of text or \"end\" to terminate:\n");
+			scanf(" %[^\n]s",(array+num)->original_text);
+			(array+num)->no_of_words=0;
+			strcpy((array+num)->piglatin_text,"Result:");
+		}while(strcmp((array+num)->original_text,"end"));
+		for(i=0;i<num;i++){
+			count_words(array+i);
+			printf("\n---------------------------------------------------------------------------------------\n");
+			printf("Original Text:%s",(array+i)->original_text);
+			printf("\n%s",(array+i)->piglatin_text);
+			printf("\nNo. of words:%d",(array+i)->no_of_words);
+		}
+		printf("\n---------------------------------------------------------------------------------------\n");
+		printf("\n\n\nDo you want to continue(y/n)?\n");
+		scanf("%s",&opinion);
+	}while(opinion=='y' || opinion=='Y');
+}
+ 
+
+
+/*
+
+ouput:
+
+Please enter the line of text or "end" to terminate:
+hello world
+
+Please enter the line of text or "end" to terminate:
+welcome to c programming
+
+Please enter the line of text or "end" to terminate:
+here we present u piglatin
+
+Please enter the line of text or "end" to terminate:
+end
+
+---------------------------------------------------------------------------------------
+Original Text:hello world
+Result:elloha orldwa.
+No. of words:2
+---------------------------------------------------------------------------------------
+Original Text:welcome to c programming
+Result:elcomewa ota ca ogrammingpra.
+No. of words:4
+---------------------------------------------------------------------------------------
+Original Text:here we present u piglatin
+Result:ereha ewa esentpra ua iglatinpa.
+No. of words:5
+---------------------------------------------------------------------------------------
+
+
+
+Do you want to continue(y/n)?
+n
+
+
+
+*/
